@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SentiMind - Sentiment Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Header -->
+    <header class="header">
+        <h1>SentiMind</h1>
+        <p>AI-Powered Sentiment Analysis</p>
+    </header>
+
+    <!-- Input Card -->
+    <div class="card">
+        <h2>Enter Text to Analyze</h2>
+
+        <form method="POST">
+            <textarea name="text" placeholder="Type or paste your text here..." required>{{ text }}</textarea>
+
+            <div class="button-group">
+                <button type="submit" class="btn">Analyze Sentiment</button>
+                <a href="/" class="btn secondary">Reset</a>
+            </div>
+        </form>
+    </div>
+
+    {% if sentiment %}
+    <!-- Results Card -->
+    <div class="card result-card">
+        <h2>Analysis Results</h2>
+
+        <div class="sentiment-badge {{ sentiment|lower }}">
+    {% if sentiment == "Positive" %}
+        😊 Positive
+    {% elif sentiment == "Negative" %}
+        😢 Negative
+    {% else %}
+        😐 Neutral
+    {% endif %}
+</div>
+
+
+        <div class="metric">
+            <label>Polarity: {{ polarity }}</label>
+            <div class="progress">
+                <div class="progress-bar polarity"
+                     data-width="{{ ((polarity + 1) / 2) * 100 }}"></div>
+            </div>
+        </div>
+
+        <div class="metric">
+            <label>Subjectivity: {{ subjectivity }}</label>
+            <div class="progress">
+                <div class="progress-bar subjectivity"
+                     data-width="{{ subjectivity * 100 }}"></div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <footer>
+        <p>Built with Flask & TextBlob</p>
+    </footer>
+
+</div>
+
+<script>
+    // Apply progress bar widths safely (NO CSS/Jinja conflict)
+    document.querySelectorAll(".progress-bar").forEach(bar => {
+        const width = bar.getAttribute("data-width");
+        if (width) {
+            bar.style.width = width + "%";
+        }
+    });
+</script>
+
+</body>
+</html>
